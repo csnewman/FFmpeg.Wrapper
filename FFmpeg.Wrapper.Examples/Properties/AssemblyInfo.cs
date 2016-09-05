@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FFmpeg.Wrapper")]
+[assembly: AssemblyTitle("FFmpeg.Wrapper.Examples")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FFmpeg.Wrapper")]
+[assembly: AssemblyProduct("FFmpeg.Wrapper.Examples")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("62ad3754-bbf3-4f2a-9f55-10c0292adda8")]
+[assembly: Guid("d650da38-f4f4-4886-9135-3aacfaf8ff41")]
 
 // Version information for an assembly consists of the following four values:
 //
