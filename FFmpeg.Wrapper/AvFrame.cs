@@ -1,38 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FFmpeg.AutoGen;
+﻿using FFmpeg.AutoGen;
 
 namespace FFmpeg.Wrapper
 {
-    public unsafe class AvFrame
+    public unsafe class AvFrame : IFrame
     {
-        public AVFrame* NativeObj;
-        public IntArray LineSize => new IntArray(NativeObj->linesize);
-        public SByteBufferArray Data => new SByteBufferArray(&NativeObj->data0);
-        public SByteBuffer Data0 => new SByteBuffer(NativeObj->data0);
-
+        private AVFrame* _nativeObj;
 
         public AvFrame(AVFrame* nativeObj)
         {
-            NativeObj = nativeObj;
+            _nativeObj = nativeObj;
         }
+
+        public AVFrame* NativeObject => _nativeObj;
+
+        public int Width => _nativeObj->width;
+
+        public int Height => _nativeObj->height;
+
+        public AvPixelFormat Format => (AvPixelFormat)_nativeObj->format;
+
+        public ByteBufferArray Data => new ByteBufferArray(_nativeObj->data);
+
+        public int[] Strides => new IntArray(_nativeObj->linesize).Native.ToArray();
 
         public static AvFrame Allocate()
         {
-            return new AvFrame(ffmpeg.av_frame_alloc());
+            var nativeFrame = ffmpeg.av_frame_alloc();
+
+            return new AvFrame(nativeFrame);
         }
 
-        public static implicit operator AvPicture(AvFrame frame)
-        {
-            return new AvPicture((AVPicture*) frame.NativeObj);
-        }
+        public AvBuffer Buffer => new AvBuffer(_nativeObj[0].data[0], 1000000); // buffer.Length); //{ get; set; }
 
-        public void Free()
+        public void Unref()
         {
-            ffmpeg.av_free(NativeObj);
+            ffmpeg.av_frame_unref(_nativeObj);
         }
     }
 }

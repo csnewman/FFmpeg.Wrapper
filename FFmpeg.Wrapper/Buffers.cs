@@ -1,67 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FFmpeg.AutoGen;
+﻿using FFmpeg.AutoGen;
 
 namespace FFmpeg.Wrapper
 {
-
-    public unsafe class VoidBuffer
-    {
-        public void* NativeObj;
-
-        public VoidBuffer(void* buffer)
-        {
-            NativeObj = buffer;
-        }
-
-        public static implicit operator SByteBuffer(VoidBuffer source)
-        {
-            return new SByteBuffer((sbyte*) source.NativeObj);
-        }
-    }
-
     public unsafe class IntArray
     {
-        public int* NativeObj;
-        public int this[int id] => NativeObj[id];
+        public int_array8 nativeObj;
+        public int this[int id] => nativeObj[(uint)id];
 
-        public IntArray(int* buffer)
+        public IntArray(int_array8 instance)
         {
-            NativeObj = buffer;
+            nativeObj = instance;
         }
 
+        public int_array8 Native { get; }
     }
 
-    public unsafe class SByteBuffer
+    public unsafe class ByteBufferArray
     {
-        public sbyte* NativeObj;
+        private readonly byte*[] buffer;
 
-        public SByteBuffer(sbyte* buffer)
+        public ByteBufferArray(byte*[] buffer)
         {
-            NativeObj = buffer;
+            this.buffer = buffer;
         }
 
-        public static implicit operator IntPtr(SByteBuffer frame)
-        {
-            return new IntPtr(frame.NativeObj);
-        }
+        public byte* this[int i] => buffer[i];
 
-        public void Free()
-        {
-            ffmpeg.av_free(NativeObj);
-        }
-    }
-
-    public unsafe class SByteBufferArray
-    {
-        public sbyte** NativeObj;
-
-        public SByteBufferArray(sbyte** buffer)
-        {
-            NativeObj = buffer;
-        }
+        public byte*[] Native => buffer;
     }
 }
