@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using FFmpeg.AutoGen;
 
 namespace FFmpeg.Wrapper
@@ -10,13 +6,14 @@ namespace FFmpeg.Wrapper
     public unsafe class AvFormatContext
     {
         private AVFormatContext* _nativeObj;
+
         public uint StreamCount => _nativeObj->nb_streams;
 
-        public IList<AvStream> Streams
+        public List<AvStream> Streams
         {
             get
             {
-                IList<AvStream> streams = new List<AvStream>();
+                var streams = new List<AvStream>();
 
                 for (int i = 0; i < _nativeObj->nb_streams; i++)
                 {

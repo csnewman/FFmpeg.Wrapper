@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FFmpeg.AutoGen;
+﻿using FFmpeg.AutoGen;
 
 namespace FFmpeg.Wrapper
 {
@@ -23,7 +18,7 @@ namespace FFmpeg.Wrapper
 
         public static AvCodec FindDecoder(AvCodecId id)
         {
-            AVCodec* codec = ffmpeg.avcodec_find_decoder((AVCodecID) id);
+            AVCodec* codec = ffmpeg.avcodec_find_decoder((AVCodecID)id);
             return codec == null ? null : new AvCodec(codec);
         }
 

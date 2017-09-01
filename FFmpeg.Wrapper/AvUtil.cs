@@ -10,11 +10,7 @@ namespace FFmpeg.Wrapper
         private static extern char* av_version_info();
 
         public static uint Version => ffmpeg.avutil_version();
-        public static string VersionInfo => Marshal.PtrToStringAnsi((IntPtr) av_version_info());
 
-        public static VoidBuffer Malloc(ulong size)
-        {
-            return new VoidBuffer(ffmpeg.av_malloc(size));
-        }
+        public static string VersionInfo => Marshal.PtrToStringAnsi((IntPtr) av_version_info());
     }
 }

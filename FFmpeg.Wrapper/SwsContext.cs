@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+
 using FFmpeg.AutoGen;
 
 namespace FFmpeg.Wrapper
 {
-    public unsafe class SwsContext
+    public unsafe class SwsContext : IDisposable
     {
-        private AutoGen.SwsContext* _nativeObj;
+        private readonly AutoGen.SwsContext* _nativeObj;
 
         public SwsContext(AutoGen.SwsContext* nativeObj)
         {
@@ -23,19 +19,32 @@ namespace FFmpeg.Wrapper
             AutoGen.SwsContext* natObj = ffmpeg.sws_getContext(srcW, srcH, (AVPixelFormat) srcFormat, dstW, dstH,
                 (AVPixelFormat) dstFormat,
                 (int) flags, null, null, null);
+
             return natObj == null ? null : new SwsContext(natObj);
         }
 
-        public int Scale(SByteBufferArray src, IntArray srcStride, int srcSliceY, int srcSliceH,
-            SByteBufferArray dst, IntArray dstStride)
+
+        public int Scale(AvFrame source, int srcSliceY, int srcSliceH, IFrame destination)
         {
-            return ffmpeg.sws_scale(_nativeObj, src.NativeObj, srcStride.NativeObj, srcSliceY, srcSliceH, dst.NativeObj,
-                dstStride.NativeObj);
+            return ffmpeg.sws_scale(
+                c         : _nativeObj, 
+                srcSlice  : source.NativeObject->data,
+                srcStride : source.NativeObject->linesize,
+                srcSliceY : srcSliceY, 
+                srcSliceH : srcSliceH, 
+                dst       : destination.Data.Native,
+                dstStride : destination.Strides
+            );
         }
 
         public void Free()
         {
             ffmpeg.av_free(_nativeObj);
+        }
+
+        public void Dispose()
+        {
+            Free();
         }
     }
 }

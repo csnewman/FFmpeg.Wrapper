@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 using FFmpeg.AutoGen;
+using System;
 
 namespace FFmpeg.Wrapper
 {
-    public unsafe class AvPacket
+    public unsafe class AvPacket : IDisposable
     {
         public AVPacket* NativeObj;
         private GCHandle? _handle;
+
         public int StreamIndex => NativeObj->stream_index;
 
         public AvPacket(AVPacket* nativeObj)
@@ -28,7 +25,7 @@ namespace FFmpeg.Wrapper
         {
             AVPacket native = new AVPacket();
             GCHandle handle = GCHandle.Alloc(native, GCHandleType.Pinned);
-            return new AvPacket((AVPacket*) handle.AddrOfPinnedObject().ToPointer()) {_handle = handle};
+            return new AvPacket((AVPacket*)handle.AddrOfPinnedObject().ToPointer()) { _handle = handle };
         }
 
         public void Init()
@@ -36,5 +33,17 @@ namespace FFmpeg.Wrapper
             ffmpeg.av_init_packet(NativeObj);
         }
 
+
+        public void Unref()
+        {
+            ffmpeg.av_packet_unref(NativeObj);
+        }
+
+        public void Dispose()
+        {
+            _handle?.Free();
+
+            _handle = null;
+        }
     }
 }
